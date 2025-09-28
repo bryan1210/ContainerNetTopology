@@ -1,0 +1,20 @@
+//build
+docker build -t 'imagename':'tag' .
+//build by name
+docker build -f 'dockerfile name' -t 'imagename':'tag' .
+//run
+docker run -d --name 'containername' 'imagename':'tag'
+//stop
+docker stop 'containername'
+//remove images
+docker rmi 'containername'
+//list images
+docker images
+//remove containers
+docker rm 'containername'
+//list containers
+docker ps 
+//list all containers
+docker ps -a
+//show logs
+docker logs "containername"

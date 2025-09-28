@@ -1,0 +1,1 @@
+sudo -E env "PATH=$PATH" "VIRTUAL_ENV=$VIRTUAL_ENV" "PYTHONHOME=" python3 /home/bryan/Desktop/containernet/venv/bin/mn -c
