@@ -46,6 +46,12 @@ def main():
     dmz_names = ['Patch','Hist_mir','IO_srv']
     DMZ_switch, _ = createPod(net,6,dmz_names,3)
 
+    enterprise_names = ['ent']
+    enterprise_workstations, _ = createPod(net,7,enterprise_names,3)
+
+    enterprise_servers_names = ['email','web','database']
+    enterprise_servers, _ = createPod(net,8,enterprise_servers_names,3)
+
     info('*** Adding switches\n')
     OT_switch = net.addSwitch('OT_s',dpid=hex_dpid(150))
     DMZ_Firewall = net.addSwitch('DMZ_fw',dpid=hex_dpid(151))
@@ -62,6 +68,9 @@ def main():
     net.addLink(DMZ_Firewall, OT_switch)
     net.addLink(DMZ_Firewall, DMZ_switch)
     net.addLink(DMZ_Firewall, enterprise_switch)
+
+    net.addLink(enterprise_switch, enterprise_workstations)
+    net.addLink(enterprise_switch, enterprise_servers)
 
     info('*** Starting network\n')
     net.start()
