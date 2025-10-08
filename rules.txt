@@ -1,0 +1,10 @@
+[s1]
+del-flows s1
+add-flow s1 "priority=0,actions=drop"
+add-flow s1 "priority=100,tcp,tp_dst=502,actions=output:2"
+add-flow s1 "priority=100,tcp,tp_src=502,actions=output:1"
+[s2]
+del-flows s2
+add-flow s2 "priority=0,actions=drop"
+add-flow s2 "priority=100,tcp,tp_dst=502,actions=output:2"
+add-flow s2 "priority=100,tcp,tp_src=502,actions=output:1"

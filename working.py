@@ -2,6 +2,7 @@
 """
 This is the most simple example to showcase Containernet.
 """
+import testyaml
 from mininet.net import Containernet
 from mininet.node import Controller
 from mininet.cli import CLI
@@ -12,9 +13,9 @@ setLogLevel('info')
 def hex_dpid(n: int) -> str:
     return f'{n:016x}'  # 16 hex digits, zero-padded
 
-def createPod(net, pod_idx, names, numHost):
+def createPod(net, name, pod_idx, names, numHost):
     info(f'*** Adding Process Switch {pod_idx}\n')
-    s = net.addSwitch(f's{pod_idx}',dpid=hex_dpid(pod_idx))
+    s = net.addSwitch(name,dpid=hex_dpid(pod_idx))
     hosts = []
     for host in range(numHost):
         i = host
@@ -26,6 +27,16 @@ def createPod(net, pod_idx, names, numHost):
         hosts.append(d)
     return s, hosts
 
+def loadRules(net, name):
+    with open(name) as f:
+        policy = testyaml.safe_load(f)
+
+    for sw_name, commands in policy.items():
+        sw = net.get(sw_name)       # get Mininet switch object
+        sw.cmd(f'ovs-ofctl del-flows {sw}')
+        for command in commands:
+            sw.cmd(f'ovs-ofctl add-flow {sw} "{command}"')
+
 def main():
     net = Containernet(controller=Controller)
     info('*** Adding controller\n')
@@ -33,9 +44,8 @@ def main():
 
     info('*** Creating Process Cells\n')
     process_names=['PLC','Sen','Act','HMI','Gen']
-    process_switch_1, _ = createPod(net,1,process_names,4)
-    process_switch_2, _ = createPod(net,2,process_names,4)
-    process_switch_3, _ = createPod(net,3,process_names,4)
+    process_switch_1, _ = createPod(net,'ps1',1,process_names,4)
+    process_switch_2, _ = createPod(net,'ps2',2,process_names,4)
 
     engineer_names = ['eng']
     engineering_switch, _ = createPod(net,4,engineer_names,4)

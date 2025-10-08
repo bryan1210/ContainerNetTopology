@@ -1,0 +1,25 @@
+switches:
+  process_sw_1:
+    - PLC: 10.0.0.1 
+    - Sen: 10.0.0.2
+    - Act: 10.0.0.3
+    - HMI: 10.0.0.4
+  process_sw_2:
+    - PLC: 10.0.1.1 
+    - Sen: 10.0.1.2
+    - Act: 10.0.1.3
+    - HMI: 10.0.1.4
+  eng_sw_1:
+    - eng_1: 10.0.2.1
+    - eng_2: 10.0.2.2
+    - eng_3: 10.0.2.3
+  ot_srv_sw_1:
+    - dc_1: 10.0.3.1
+    - hist_1: 10.0.3.2
+    - io_srv_1: 10.0.3.3
+
+links:
+  agg:
+    - process_sw_1
+    - process_sw_2
+    
