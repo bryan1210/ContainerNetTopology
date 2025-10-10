@@ -1,25 +1,45 @@
 switches:
-  process_sw_1:
-    - PLC: 10.0.0.1 
-    - Sen: 10.0.0.2
-    - Act: 10.0.0.3
-    - HMI: 10.0.0.4
-  process_sw_2:
-    - PLC: 10.0.1.1 
-    - Sen: 10.0.1.2
-    - Act: 10.0.1.3
-    - HMI: 10.0.1.4
+  proc_sw_1:
+    - PLC_1: 10.0.0.1 
+    - Sen_1: 10.0.0.2
+    - Act_1: 10.0.0.3
+    - HMI_1: 10.0.0.4
+  proc_sw_2:
+    - PLC_2: 10.0.1.1 
+    - Sen_2: 10.0.1.2
+    - Act_2: 10.0.1.3
+    - HMI_2: 10.0.1.4
   eng_sw_1:
     - eng_1: 10.0.2.1
     - eng_2: 10.0.2.2
     - eng_3: 10.0.2.3
-  ot_srv_sw_1:
-    - dc_1: 10.0.3.1
-    - hist_1: 10.0.3.2
+  ot_srv_1:
+    - dc_1:     10.0.3.1
+    - hist_1:   10.0.3.2
     - io_srv_1: 10.0.3.3
+  dmz_1:
+    - patch_1:    10.0.4.1
+    - hist_mir_1: 10.0.4.2
+    - io_srv_dmz: 10.0.4.3
+  entw_sw_1:
+    - ent_1: 10.0.5.1
+    - ent_2: 10.0.5.2
+    - ent_3: 10.0.5.3
+  ents_sw_1:
+    - email_1:    10.0.6.1
+    - web_1:      10.0.6.2
+    - database_1: 10.0.6.3
 
 links:
-  agg:
-    - process_sw_1
-    - process_sw_2
-    
+  ot_sw_1:
+    - proc_sw_1
+    - proc_sw_2
+    - eng_sw_1
+    - ot_srv_1
+  ent_sw_1:
+    - entw_sw_1
+    - ents_sw_1
+  firewall_1:
+    - dmz_1
+    - ot_sw_1
+    - ent_sw_1
