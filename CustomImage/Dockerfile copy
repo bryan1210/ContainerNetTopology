@@ -1,0 +1,21 @@
+# Single container exposing Modbus TCP (502), OPC UA (4840), MQTT (1883)
+# Note: 502 is a privileged port; running as root inside the container is okay here.
+FROM python:3.10-bullseye
+
+WORKDIR /app
+
+COPY requirements.txt /app/
+RUN apt-get update && apt-get install -y --no-install-recommends iputils-ping iproute2 net-tools libsnap7-1\
+    && pip install --no-cache-dir --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir python-snap7==1.1
+
+# Copy server and client tools (clients are optional inside the image)
+COPY server_all.py /app/server_all.py
+COPY clients /app/clients
+
+
+EXPOSE 102 502 4840 1883
+
+# Keep it simple: run the combined server
+CMD ["python", "/app/server_all.py"]

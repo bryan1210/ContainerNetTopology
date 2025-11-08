@@ -1,0 +1,78 @@
+zones:
+  IT:
+    IT_Workstations:
+      subnet: 10.0.5.0/24
+      devices:
+        - ent_1: 10.0.5.1
+        - ent_2: 10.0.5.2
+        - ent_3: 10.0.5.3
+    IT_Servers:
+      subnet: 10.0.6.0/24
+      devices:
+        - email_1:    10.0.6.1
+        - web_1:      10.0.6.2
+        - database_1: 10.0.6.3
+  DMZ: 
+    DMZ_Servers:
+      subnet: 10.0.4.0/24
+      devices:
+        - patch_1:    10.0.4.1
+        - hist_mir_1: 10.0.4.2
+        - io_srv_dmz: 10.0.4.3
+  OT: 
+    OT_Process_One:
+      subnet: 10.0.0.0/24
+      devices:
+        - PLC_1: 10.0.0.1 
+        - Sen_1: 10.0.0.2
+        - Act_1: 10.0.0.3
+        - HMI_1: 10.0.0.4
+    OT_Process_Two:
+      subnet: 10.0.1.0/24
+      devices:
+        - PLC_2: 10.0.1.1 
+        - Sen_2: 10.0.1.2
+        - Act_2: 10.0.1.3
+        - HMI_2: 10.0.1.4
+    OT_Workstations:
+      subnet: 10.0.2.0/24
+      devices:
+        - eng_1: 10.0.2.1
+        - eng_2: 10.0.2.2
+        - eng_3: 10.0.2.3
+    OT_Servers:
+      subnet: 10.0.3.0/24
+      devices:
+        - dc_1:     10.0.3.1
+        - hist_1:   10.0.3.2
+        - io_srv_1: 10.0.3.3
+flows:
+  OT_to_DMZ:
+    allowed: False
+    rule_1:
+      name: OT Updates
+      allowed: True
+      source: 
+        - OT_Workstations
+        - OT_Servers
+        - HMI_1
+        - HMI_2
+      destination: patch_1
+      port: 443
+    rule_2:
+      name: OT Updates
+      allowed: True
+      source: 
+        - hist_1
+      destination: hist_mir_1
+      port: 4840
+  DMZ_to_OT:
+    allowed: False
+    #IT_to_OT:
+  #  allowed: False
+  #OT_to_IT:
+  #  allowed: False
+  #IT_to_DMZ:
+  #  allowed: False
+  #DMZ_to_IT:
+  #  allowed: False
