@@ -10,11 +10,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy server and client tools (clients are optional inside the image)
 #COPY nmap_client.py /app/nmap_client.py
-#COPY server_all.py /app/server_all.py
-#COPY start.sh /app/start.sh
+#COPY clients/server_all.py /app/server_all.py
 COPY clients /app
-
-#RUN chmod +x /app/start.sh
 
 #EXPOSE 502
 

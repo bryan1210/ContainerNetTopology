@@ -11,6 +11,7 @@ import yaml
 
 # --- Agent --
 from flask import Flask, request, jsonify
+import agent
 
 # --- Modbus (pymodbus 2.5.x) ---
 from pymodbus.server.sync import StartTcpServer
@@ -112,14 +113,13 @@ def start_random(exclude, quantity):
         thread.start()
         threads.append(thread) 
 
-import agent
 def run_agent():
     app = Flask(__name__)    
     @app.route('/call_agent', methods=['POST'])
     def call_agent():
         yaml_data = request.data.decode('utf-8')
-        #ret = agent.agent(yaml_data)
-        return jsonify(agent.agent(yaml_data))
+        ret = agent.agent(yaml_data)
+        return jsonify(ret)
     
     app.run(host='0.0.0.0', port=5000)
 

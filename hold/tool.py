@@ -31,7 +31,7 @@ print(devices)
 #read in input file
 #Process Input file
 
-import nmap_client
+import hold.nmap_client as nmap_client
 for each in devices:
     response = requests.post(
         f"http://{each}:5000/run_tests",

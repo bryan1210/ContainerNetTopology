@@ -17,6 +17,7 @@ def createNetwork(net,name):
         for device in devices:
             for name, IP in device.items():
                 d = net.addDocker(name, ip=IP, dimage="ot-all-in-one:latest", dcmd=f'python /app/server_all.py {name}', privileged=True)
+                #d = net.addDocker(name, ip=IP, dimage="ot-all-in-one:latest", privileged=True)
                 net.addLink(d,s)
 
     for sw_name, links in network["links"].items():
