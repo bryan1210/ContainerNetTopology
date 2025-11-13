@@ -18,13 +18,13 @@ def createNetwork(net,name):
             for name, IP in device.items():
                 d = net.addDocker(name, ip=IP, dimage="ot-all-in-one:latest", dcmd=f'python /app/server_all.py {name}', privileged=True)
                 #d = net.addDocker(name, ip=IP, dimage="ot-all-in-one:latest", privileged=True)
-                net.addLink(d,s)
+                net.addLink(d,s,cls=TCLink)
 
     for sw_name, links in network["links"].items():
         s = net.addSwitch(sw_name)
         for link in links:
             sw = net.get(link)
-            net.addLink(s,sw)
+            net.addLink(s,sw,cls=TCLink)
 
 
 def loadRules(net, name):
@@ -57,6 +57,8 @@ def main():
     info('*** Make Xterm\n')
     HMI_1 = net.get("HMI_1")
     makeTerm(HMI_1)
+    HMI_2 = net.get("HMI_2")
+    makeTerm(HMI_2)
 
     info('*** Running CLI\n')
     CLI(net)

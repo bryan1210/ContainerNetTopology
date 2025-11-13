@@ -1,0 +1,41 @@
+zones:
+  IT:
+    IT_Workstations:
+      subnet: 10.0.5.0/24
+      devices:
+        - ent_1: 10.0.5.1
+        - ent_2: 10.0.5.2
+        - ent_3: 10.0.5.3
+
+
+
+flows:
+  OT_to_DMZ:
+    allowed: False
+    rule_1:
+      name: OT Updates
+      allowed: True
+      source: 
+        - OT_Workstations
+        - OT_Servers
+        - HMI_1
+        - HMI_2
+      destination: patch_1
+      port: 443
+    rule_2:
+      name: OT Updates
+      allowed: True
+      source: 
+        - hist_1
+      destination: hist_mir_1
+      port: 4840
+  DMZ_to_OT:
+    allowed: False
+    #IT_to_OT:
+  #  allowed: False
+  #OT_to_IT:
+  #  allowed: False
+  #IT_to_DMZ:
+  #  allowed: False
+  #DMZ_to_IT:
+  #  allowed: False

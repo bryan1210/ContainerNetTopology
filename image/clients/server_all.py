@@ -75,6 +75,7 @@ def run_opcua_server():
     temp_var.set_writable()  # allow clients to write
 
     # Start server
+    #server.set_max_workers(25)
     server.start()
     log.info("OPC UA listening on opc.tcp://0.0.0.0:4840")
 
@@ -91,7 +92,7 @@ def run_opcua_server():
 def run_random_port(port):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', port))  # Listen on all interfaces, port 8080
-    server_socket.listen(1)
+    server_socket.listen(30)
     log.info(f"TCP listening on 0.0.0.0:{port}")
     # Accept connections
     while True:
@@ -117,7 +118,8 @@ def run_agent():
     app = Flask(__name__)    
     @app.route('/call_agent', methods=['POST'])
     def call_agent():
-        yaml_data = request.data.decode('utf-8')
+        data = request.data.decode('utf-8')
+        yaml_data = yaml.safe_load(data)
         ret = agent.agent(yaml_data)
         return jsonify(ret)
     
@@ -156,7 +158,7 @@ if __name__ == "__main__":
     opcua_thread = threading.Thread(target=run_opcua_server, daemon=True)
     opcua_thread.start()
 
-    start_random(exclude, 10)
+    start_random(exclude, 2)
 
     try:
         run_modbus_server()
