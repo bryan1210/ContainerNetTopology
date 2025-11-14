@@ -129,12 +129,13 @@ def run_agent():
 if __name__ == "__main__":
     exclude = {502,4840,80,443,5000,23,22}
     
+    """
     if len(sys.argv) != 2:
         print("Incorrect amount of arguemnts")
         exit()
     
     hostname = sys.argv[1]
-
+    """
     #Agent
     agent_server = threading.Thread(target=run_agent, daemon=True)
     agent_server.start()

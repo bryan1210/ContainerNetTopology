@@ -1,3 +1,15 @@
+import os
 
-test = {'nmap': {'command_line': 'nmap -oX - -sn -T4 -n 10.0.3.0', 'scaninfo': {}, 'scanstats': {'timestr': 'Wed Nov 12 23:50:02 2025', 'elapsed': '0.44', 'uphosts': '0', 'downhosts': '1', 'totalhosts': '1'}}, 'scan': {}}
-print(test['nmap']['scanstats']['uphosts'])
+def read():
+    with os.scandir("reports") as entries:
+        for entry in entries:
+            if entry.is_file():
+                with open(entry.path) as f:
+                    print(f.read())
+
+def write():
+    for i in range(10):
+        with open(f"reports/{str(i)}.txt", "w") as f:
+            for j in range(10):
+                f.write(f"{str(j)}\n")
+read()

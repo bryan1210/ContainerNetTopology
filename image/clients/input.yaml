@@ -47,32 +47,19 @@ zones:
         - hist_1:   10.0.3.2
         - io_srv_1: 10.0.3.3
 flows:
-  OT_to_DMZ:
-    allowed: False
-    rule_1:
-      name: OT Updates
-      allowed: True
-      source: 
-        - OT_Workstations
-        - OT_Servers
-        - HMI_1
-        - HMI_2
-      destination: patch_1
-      port: 443
-    rule_2:
-      name: OT Updates
-      allowed: True
-      source: 
-        - hist_1
-      destination: hist_mir_1
-      port: 4840
-  DMZ_to_OT:
-    allowed: False
-    #IT_to_OT:
-  #  allowed: False
-  #OT_to_IT:
-  #  allowed: False
-  #IT_to_DMZ:
-  #  allowed: False
-  #DMZ_to_IT:
-  #  allowed: False
+# hist > hist mirror
+  - 10.0.3.2 > 10.0.4.2 | 4840
+# DMZ IO Server > OT DMZ Server
+  - 10.0.4.3 > 10.0.3.3 | 4840
+#OT DC > patch server
+  - 10.0.3.1 > 10.0.4.1 | 443
+#OT Workstations > Patch 
+  - 10.0.2.0/24 > 10.0.4.1 | 443
+#IO_serv -> PLC 1
+  - 10.0.4.3 > 10.0.0.1 | 502
+#IO_serv -> PLC 2
+  - 10.0.4.3 > 10.0.1.1 | 502
+#Eng Workstations > Patch
+  - 10.0.5.0/24 > 10.0.4.1 | 22
+#Hist MIrror > database
+  - 10.0.4.2 > 10.0.6.3 | 443

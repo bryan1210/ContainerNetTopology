@@ -11,5 +11,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY clients /app
 
 RUN mkdir -p /app/reports
-
+COPY final_results.txt /app/reports
 

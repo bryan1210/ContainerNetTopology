@@ -3,6 +3,7 @@ import yaml
 import sys
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import os
 
 #Ensure correct number of inputs are givin
 if len(sys.argv) > 2:
@@ -54,7 +55,7 @@ def post_to_device(device):
         return device, None, str(e)
     
 # set the numbner of threads 
-max_workers = min(3, len(devices))  # Max 20 concurrent requests
+max_workers = min(25, len(devices))  # Max 20 concurrent requests
 
 with ThreadPoolExecutor(max_workers=max_workers) as executor:
     futures = [executor.submit(post_to_device, device) for device in devices]
@@ -69,13 +70,28 @@ with ThreadPoolExecutor(max_workers=max_workers) as executor:
         else:
             print(f"Successfully recieved report from host {ip_hostname[device]} ({device})\n")
             with open(f'reports/{ip_hostname[device]}.txt', 'w') as f:
-                print(device)
+                #print(device)
                 for each in zone_results:
                     f.write(f"{each}\n")
-                    print(each)
+                    #print(each)
 
-print("Individual hosts reports are located in reports folder")
 
+print("Reports are located in reports folder.\n")
+
+final_results = []
+with os.scandir("/app/reports") as entries:
+    for entry in entries:
+        if entry.is_file():
+            with open(entry.path) as f:
+                lines = f.readlines()
+                for row in lines:
+                    if len(row.split(" ")[-1])>4:
+                        final_results.append(row)
+"""
+with open("/app/reports/final_results.txt", 'w') as f:
+    for line in final_results:
+        f.write(line)
+"""
 elasped_time = int(time.time()-start_time)
 
 hours = elasped_time // 3600
@@ -83,4 +99,4 @@ minutes = (elasped_time % 3600) // 60
 seconds = elasped_time % 60
 
 #Print Elasped Time
-print(f"Execution time: {hours}h {minutes}m {seconds}s")
+#print(f"Execution time: {hours}h {minutes}m {seconds}s")

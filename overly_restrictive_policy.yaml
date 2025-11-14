@@ -1,0 +1,17 @@
+flows:
+#default deny
+  - default deny 
+#Historian > Historian mirror
+  - 10.0.3.2 > 10.0.4.2 | 4840
+# DMZ IO Server > OT DMZ Server
+  - 10.0.4.3 > 10.0.3.3 | 4840
+#OT DC > patch server
+  - 10.0.3.1 > 10.0.4.1 | 443
+#OT Workstations > Patch 
+  - 10.0.2.1 > 10.0.4.1 | 443
+#IO_serv -> PLC 1
+  - 10.0.4.3 > 10.0.0.1 | 502
+#Eng Workstations > Patch
+  - 10.0.5.0/24 > 10.0.4.1 | 22
+#Hist MIrror > database
+  - 10.0.4.2 > 10.0.6.3 | 443

@@ -64,10 +64,9 @@ import nmap
 nm = nmap.PortScanner()
 
 def nmap_port_scan(host):
-    """Scan a host and return list of open ports"""    
-    # Scan common ports (adjust range as needed)
-    #nm.scan(host, '1-4999,5001-65000', arguments='-Pn -T5')
-    nm.scan(host, arguments='-Pn -T4 -n --top-ports 500 --exclude-ports 5000')
+    print(f"Scanning {host}")
+    #nm.scan(host, arguments='-Pn -T4 -n --top-ports 2000 --exclude-ports 5000')
+    nm.scan(host, arguments='-Pn -n -p 502,4840,80,443,23,22')
     open_ports = []
     # Check if host is up
     if host in nm.all_hosts():
@@ -75,11 +74,11 @@ def nmap_port_scan(host):
         for proto in nm[host].all_protocols():
             # Get all ports for this protocol
             ports = nm[host][proto].keys()
-            
             # Filter only open ports
             for port in ports:
                 if nm[host][proto][port]['state'] == 'open':
                     open_ports.append(port)
+                    print(f"Open port {port}")
     return sorted(open_ports)
 
 def host_discovery(subnet):
@@ -89,6 +88,7 @@ def host_discovery(subnet):
     for host in nm.all_hosts():
         if nm[host].state() == 'up':
             hosts.append(host)
+            print(f'foudn host {host}')
     return hosts
 # --- NMAP ---
 
@@ -154,6 +154,7 @@ def host_discover(data):
     return f"Undocumented Hosts : {undocumented_hosts}", discovered_hosts
 
 def test_connections(data,ip_by_zone):
+    print(f"Test connection {data}")
     results = {}
     report = []
     my_zone = ""
@@ -170,21 +171,34 @@ def test_connections(data,ip_by_zone):
             continue
         print(f"Test connection each = {each}")
         results[each] = nmap_port_scan(each)
-        report.append(f"{my_ip} -> {each} : port {results[each]}")
+        if each:
+            report.append(f"{my_ip} > {each} : port {results[each]}")
+        else:
+            report.append(f"{my_ip} X {each}")
     return report, results
 
+def get_input_ip(data):
+    ips = []
+    for zone_name, zone_data in data.items():
+        for network_name, network_data in zone_data.items():
+            for device in network_data['devices']:
+                # Each device is a dict with one key-value pair
+                for device_name, ip in device.items():
+                    ips.append(ip)
+    return ips
 
 def agent(data):
     results= []
     ips_by_zone = get_ips_by_zone(data)
     ip_hostname = generate_name_lookup(data)
     input_subnets = get_subnet_ips(data)
+    input_ip = get_input_ip(data)
     #discover hosts
     host_discover_report, discovered_hosts = host_discover(input_subnets)
     results.append(host_discover_report)
     print(f'Type of discover host = {discovered_hosts}')
     #Test segementation
-    test_connections_report, test_connections_results = test_connections(discovered_hosts,ips_by_zone)
+    test_connections_report, test_connections_results = test_connections(input_ip,ips_by_zone)
     results.extend(test_connections_report)
     print(test_connections_results)
     #results.append(test_connections_results)
